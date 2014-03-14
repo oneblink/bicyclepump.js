@@ -1,0 +1,36 @@
+{
+  "name": "bicyclepump.js",
+  "version": "0.0.0",
+  "description": "JavaScript Object Inflation with Dependency Injection",
+  "main": "bicyclepump.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/blinkmobile/bicyclepump.js.git"
+  },
+  "keywords": [
+    "dependency",
+    "injection"
+  ],
+  "author": "\"Ron Waldon\" (http://jokeyrhy.me/)",
+  "license": "BSD",
+  "bugs": {
+    "url": "https://github.com/blinkmobile/bicyclepump.js/issues"
+  },
+  "homepage": "https://github.com/blinkmobile/bicyclepump.js",
+  "devDependencies": {
+    "chai": "^1.9",
+    "grunt": "^0.4",
+    "grunt-contrib-watch": "^0.6",
+    "grunt-contrib-uglify": "^0.4",
+    "grunt-jslint": "^1.1",
+    "grunt-mocha": "^0.4",
+    "grunt-mocha-cli": "^1.7",
+    "mocha": "^1.18"
+  }
+}
