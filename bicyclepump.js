@@ -19,25 +19,56 @@
 }(this, function () {
   'use strict';
 
+  /**
+   * @module bicyclepump
+   */
+
   var BicyclePump;
 
+  /**
+   * @callback inflator
+   */
+
+  /**
+   * @public
+   * @constructor BicyclePump
+   * @alias module:bicyclepump
+   */
   BicyclePump = function () {
+    /**
+     * @property {inflator[]} inflators
+     */
     var inflators;
 
     inflators = [];
 
+    /**
+     * @public
+     * @memberof BicyclePump#
+     * @param {inflator} fn
+     */
     this.addInflator = function (fn) {
       if (typeof fn === 'function') {
         inflators.push(fn);
       }
     };
 
+    /**
+     * @public
+     * @memberof BicyclePump#
+     * @param {inflator} fn
+     */
     this.removeInflator = function (fn) {
       var index;
       index = inflators.indexOf(fn);
       inflators.splice(index, 1);
     };
 
+    /**
+     * @public
+     * @memberof BicyclePump#
+     * @return {inflator[]}
+     */
     this.getInflators = function () {
       var copy;
       copy = [];
