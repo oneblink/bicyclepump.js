@@ -29,8 +29,16 @@
     "grunt-contrib-watch": "^0.6",
     "grunt-contrib-uglify": "^0.4",
     "grunt-jslint": "^1.1",
+    "grunt-karma": "^0.8",
     "grunt-mocha": "^0.4",
     "grunt-mocha-cli": "^1.7",
-    "mocha": "^1.18"
+    "mocha": "^1.18",
+    "karma": "^0.12",
+    "karma-chrome-launcher": "^0.1",
+    "karma-firefox-launcher": "^0.1",
+    "karma-ievms": "0.0.4",
+    "karma-mocha": "^0.1",
+    "karma-phantomjs-launcher": "^0.1",
+    "karma-safari-launcher": "^0.1"
   }
 }
