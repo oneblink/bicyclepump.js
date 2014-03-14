@@ -1,31 +1,50 @@
 /*jslint browser:true, indent:2, node:true*/
 /*global mocha, suite, test, suiteSetup, suiteTeardown, setup, teardown*/ // Mocha
 
-/*global BicyclePump*/ // code under test
-/*jslint nomen:true*/ // Karma's global __karma__
+var BicyclePump, chai;
 
 (function (global) {
   'use strict';
   var div;
-  if (!global.document) {
+  if (!BicyclePump) {
+    BicyclePump = require('../bicyclepump');
     return; // we aren't in the browser
   }
-  div = document.getElementById('mocha');
-  if (!div) {
-    // add Mocha's div if it is missing
-    document.body.insertAdjacentHTML('afterbegin', '<div id="mocha"></div>');
+  if (global.document) {
+    div = document.getElementById('mocha');
+    if (!div) {
+      // add Mocha's div if it is missing
+      document.body.insertAdjacentHTML('afterbegin', '<div id="mocha"></div>');
+    }
+    mocha.setup('tdd');
   }
-  mocha.setup('tdd');
 }(this));
 
 
 suite('BicyclePump.js', function () {
   'use strict';
+  var assert;
 
-  test('', function () { return true; });
+  suiteSetup(function () {
+    assert = (chai || require('chai')).assert;
+  });
+
+  suite('new BicyclePump', function () {
+    var bp;
+
+    suiteSetup(function () {
+      bp = new BicyclePump();
+    });
+
+    test('result has correct prototype chain and .constructor', function () {
+      assert.instanceOf(bp, BicyclePump);
+      assert.equal(bp.constructor, BicyclePump);
+    });
+
+  });
 
 });
 
-if (this.navigator && navigator.userAgent.indexOf('PhantomJS') < 0) {
-  mocha.run(); // auto-start Mocha for real browsers
+if (this.navigator) {
+  mocha.run(); // auto-start Mocha for web browsers
 }
