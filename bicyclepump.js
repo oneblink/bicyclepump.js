@@ -22,6 +22,29 @@
   var BicyclePump;
 
   BicyclePump = function () {
+    var inflators;
+
+    inflators = [];
+
+    this.addInflator = function (fn) {
+      if (typeof fn === 'function') {
+        inflators.push(fn);
+      }
+    };
+
+    this.removeInflator = function (fn) {
+      var index;
+      index = inflators.indexOf(fn);
+      inflators.splice(index, 1);
+    };
+
+    this.getInflators = function () {
+      var copy;
+      copy = [];
+      copy.push.apply(copy, inflators);
+      return copy;
+    };
+
     return this;
   };
 

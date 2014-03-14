@@ -37,14 +37,28 @@ suite('BicyclePump.js', function () {
     });
 
     test('result has correct prototype chain and .constructor', function () {
+      assert.isObject(bp);
       assert.instanceOf(bp, BicyclePump);
       assert.equal(bp.constructor, BicyclePump);
+    });
+
+    test('.getInflators() initially returns empty Array', function () {
+      var inflators;
+      inflators = bp.getInflators();
+      assert.isArray(inflators);
+      assert.lengthOf(inflators, 0);
+    });
+
+    test('.addInflator() and .getInflators()', function () {
+      var inflator, inflators;
+      inflator = function () { return true; };
+      bp.addInflator(inflator);
+      inflators = bp.getInflators();
+      assert.isArray(inflators);
+      assert.lengthOf(inflators, 1);
+      assert.includeMembers(inflators, [inflator]);
     });
 
   });
 
 });
-
-if (this.navigator) {
-  mocha.run(); // auto-start Mocha for web browsers
-}
