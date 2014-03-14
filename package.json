@@ -6,9 +6,6 @@
   "directories": {
     "test": "tests"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "git://github.com/blinkmobile/bicyclepump.js.git"
@@ -40,5 +37,11 @@
     "karma-mocha": "^0.1",
     "karma-phantomjs-launcher": "^0.1",
     "karma-safari-launcher": "^0.1"
-  }
+  },
+  "files": [
+    "LICENSE",
+    "README.md",
+    "bicyclepump.js",
+    "package.json"
+  ]
 }
