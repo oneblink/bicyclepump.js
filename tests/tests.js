@@ -61,4 +61,81 @@ suite('BicyclePump.js', function () {
 
   });
 
+  suite('BicyclePump#inflate() with no inflators', function () {
+    var bp;
+
+    suiteSetup(function () {
+      bp = new BicyclePump();
+    });
+
+    test('inflate() initially fails when there are no Inflators', function () {
+      assert.throws(function () {
+        bp.inflate({});
+      }, Error);
+    });
+
+  });
+
+  suite('BicyclePump#inflate() with one Inflator', function () {
+    var bp;
+
+    suiteSetup(function () {
+      bp = new BicyclePump();
+    });
+
+    test('inflate() invokes Inflator', function (done) {
+      var inflator;
+      inflator = function (obj, done) {
+        assert(true, 'inflator invoked');
+        done(obj);
+      };
+      bp.addInflator(inflator);
+      bp.inflate({}, function (err, result) {
+        assert(true, 'callback invoked');
+        assert(!err, 'no error');
+        assert.isObject(result);
+        done();
+      });
+    });
+
+  });
+
+  suite('BicyclePump#inflate() with 1000x Inflators', function () {
+    var bp;
+
+    suiteSetup(function () {
+      var i, inflator;
+      bp = new BicyclePump();
+      // stub inflator that always calls `next`
+      inflator = function (obj, done, next) {
+        if (obj) {
+          next();
+        } else {
+          done(new Error('need something to inflate'));
+        }
+      };
+      i = 1000;
+      while (i > 0) {
+        i -= 1;
+        bp.addInflator(inflator);
+      }
+    });
+
+    test('inflate() invokes Inflator', function (done) {
+      var inflator;
+      inflator = function (obj, done) {
+        assert(true, 'inflator invoked');
+        done(obj);
+      };
+      bp.addInflator(inflator);
+      bp.inflate({}, function (err, result) {
+        assert(true, 'callback invoked');
+        assert(!err, 'no error');
+        assert.isObject(result);
+        done();
+      });
+    });
+
+  });
+
 });

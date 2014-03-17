@@ -23,11 +23,51 @@
    * @module bicyclepump
    */
 
-  var BicyclePump;
+  var BicyclePump, asyncExec, asyncForEach;
 
-  /**
-   * @callback inflator
-   */
+  // https://github.com/caolan/async/blob/master/lib/async.js#L75
+  // asynchronous execution with browser-compatible fallback
+  if (typeof setImmediate === 'function') {
+    asyncExec = function (fn) {
+      // not a direct alias for IE10 compatibility
+      setImmediate(fn);
+    };
+  } else if (typeof process === 'object' && process && process.nextTick) {
+    asyncExec = process.nextTick;
+  } else {
+    asyncExec = function (fn) {
+      setTimeout(fn, 0);
+    };
+  }
+
+  // https://github.com/caolan/async/blob/master/lib/async.js#L127
+  // inspired by async.eachSeries, but tailored for BicyclePump
+  asyncForEach = function (arr, obj, callback) {
+    var index, inflator, iterate, noop, done, next;
+    index = arr.length;
+    noop = function () { return true; };
+    callback = callback || noop;
+    done = function (result) {
+      result = result || new Error('inflation returned no result');
+      if (result instanceof Error) {
+        callback(result);
+        callback = noop;
+      } else {
+        asyncExec(function () {
+          callback(null, result);
+        });
+      }
+    };
+    next = function () {
+      asyncExec(iterate);
+    };
+    iterate = function () {
+      index -= 1;
+      inflator = arr[index];
+      inflator(obj, done, next);
+    };
+    iterate();
+  };
 
   /**
    * @public
@@ -74,6 +114,23 @@
       copy = [];
       copy.push.apply(copy, inflators);
       return copy;
+    };
+
+    /**
+     * @public
+     * @memberof BicyclePump#
+     * @param {Object} obj
+     * @param {Function} [callback]
+     * @return {Promise} but only if ES6 Promises are available
+     */
+    this.inflate = function (obj, callback) {
+      if (!obj) {
+        throw new Error('need something to inflate');
+      }
+      if (!inflators.length) {
+        throw new Error('need to register an Inflator first');
+      }
+      asyncForEach(inflators, obj, callback);
     };
 
     return this;
