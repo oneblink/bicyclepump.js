@@ -80,20 +80,39 @@ suite('BicyclePump.js', function () {
     var bp;
 
     suiteSetup(function () {
-      bp = new BicyclePump();
-    });
-
-    test('inflate() invokes Inflator', function (done) {
       var inflator;
+      bp = new BicyclePump();
       inflator = function (obj, done) {
-        assert(true, 'inflator invoked');
         done(obj);
       };
       bp.addInflator(inflator);
+    });
+
+    test('inflate() invokes Inflator', function (done) {
       bp.inflate({}, function (err, result) {
         assert(true, 'callback invoked');
         assert(!err, 'no error');
         assert.isObject(result);
+        done();
+      });
+    });
+
+    test('inflate() returns a Promise', function (done) {
+      var promise;
+      if (typeof Promise !== 'function') {
+        assert(true, 'ES6 Promise not supported');
+        done();
+        return;
+      }
+      promise = bp.inflate({});
+      assert.instanceOf(promise, Promise);
+      assert.isFunction(promise.then);
+      promise.then(function (result) {
+        assert(true, 'onFulfilled invoked');
+        assert.isObject(result);
+        done();
+      }, function () {
+        assert(false, 'onRejected invoked');
         done();
       });
     });

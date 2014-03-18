@@ -124,13 +124,31 @@
      * @return {Promise} but only if ES6 Promises are available
      */
     this.inflate = function (obj, callback) {
+      var done;
       if (!obj) {
         throw new Error('need something to inflate');
       }
       if (!inflators.length) {
         throw new Error('need to register an Inflator first');
       }
-      asyncForEach(inflators, obj, callback);
+      done = function (err, result) {
+        if (typeof callback === 'function') {
+          callback(err, result);
+        }
+      };
+      if (typeof Promise === 'function') {
+        return new Promise(function (resolve, reject) {
+          asyncForEach(inflators, obj, function (err, result) {
+            done(err, result);
+            if (err) {
+              reject(err);
+            } else {
+              resolve(result);
+            }
+          });
+        });
+      }
+      asyncForEach(inflators, obj, done);
     };
 
     return this;
