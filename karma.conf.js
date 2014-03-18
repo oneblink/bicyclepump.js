@@ -16,7 +16,6 @@ module.exports = function (config) {
       'Chrome',
       'Firefox',
       'Safari',
-      'IE8 - WinXP',
       'IE9 - Win7',
       'IE10 - Win7',
       'IE11 - Win7'
