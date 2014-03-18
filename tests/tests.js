@@ -157,4 +157,100 @@ suite('BicyclePump.js', function () {
 
   });
 
+  suite('BicyclePump#inflate() with one disruptive Inflator', function () {
+    var bp;
+
+    suiteSetup(function () {
+      var inflator;
+      bp = new BicyclePump();
+      inflator = function (obj, done) {
+        done(new Error('stop! ' + JSON.stringify(obj)));
+      };
+      bp.addInflator(inflator);
+    });
+
+    test('inflate() invokes Inflator', function (done) {
+      bp.inflate({}, function (err, result) {
+        assert(true, 'callback invoked');
+        assert.instanceOf(err, Error);
+        assert.isUndefined(result);
+        done();
+      });
+    });
+
+    test('inflate() returns a Promise', function (done) {
+      var promise;
+      if (typeof Promise !== 'function') {
+        assert(true, 'ES6 Promise not supported');
+        done();
+        return;
+      }
+      promise = bp.inflate({});
+      assert.instanceOf(promise, Promise);
+      assert.isFunction(promise.then);
+      promise.then(function () {
+        assert(false, 'onFulfilled invoked');
+        done();
+      }, function (err) {
+        assert(true, 'onRejected invoked');
+        assert.instanceOf(err, Error);
+        done();
+      });
+    });
+
+  });
+
+  suite('BicyclePump#inflate() with multiple working Inflators', function () {
+    var bp, Cat, Dog;
+
+    suiteSetup(function () {
+      Cat = function (obj) {
+        this.name = obj.name;
+      };
+      Cat.inflate = function (obj, done, next) {
+        if (obj.rules === true) {
+          done(new Cat(obj));
+        } else {
+          next();
+        }
+      };
+
+      Dog = function (obj) {
+        this.name = obj.name;
+      };
+      Dog.inflate = function (obj, done, next) {
+        if (obj.drools === true) {
+          done(new Dog(obj));
+        } else {
+          next();
+        }
+      };
+
+      bp = new BicyclePump();
+      bp.addInflator(Cat.inflate);
+      bp.addInflator(Dog.inflate);
+    });
+
+    test('inflate({ name: "kitty", rules: true })', function (done) {
+      bp.inflate({ name: 'kitty', rules: true }, function (err, result) {
+        assert(true, 'callback invoked');
+        assert(!err, 'no error');
+        assert.instanceOf(result, Cat);
+        assert.equal(result.name, 'kitty');
+        done();
+      });
+    });
+
+    test('inflate({ name: "puppy", drools: true })', function (done) {
+      bp.inflate({ name: 'puppy', drools: true }, function (err, result) {
+        assert(true, 'callback invoked');
+        assert(!err, 'no error');
+        assert.instanceOf(result, Dog);
+        assert.equal(result.name, 'puppy');
+        done();
+      });
+    });
+
+  });
+
 });

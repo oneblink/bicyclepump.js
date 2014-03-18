@@ -2,10 +2,6 @@
 
 JavaScript Object Inflation with Dependency Injection
 
-## Status
-
-This is a work-in-progress. We'll tag this once the below API is implemented.
-
 ## What is it?
 
 This project is inspired by [Angular.JS' dependency injection](http://docs.angularjs.org/api/auto/service/$injector), [Express.JS' middleware](http://expressjs.com/3x/api.html#app.use), and [PHP's spl_autoload_register](php.net/manual/en/function.spl-autoload-register.php).
