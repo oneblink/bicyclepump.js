@@ -251,6 +251,16 @@ suite('BicyclePump.js', function () {
       });
     });
 
+    test('inflate({ name: "confused", drools: true, rules: true })', function (done) {
+      bp.inflate({ name: "confused", drools: true, rules: true }, function (err, result) {
+        assert(true, 'callback invoked');
+        assert(!err, 'no error');
+        assert.instanceOf(result, Dog);
+        assert.equal(result.name, 'confused');
+        done();
+      });
+    });
+
   });
 
 });
